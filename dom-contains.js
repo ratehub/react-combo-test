@@ -5,7 +5,7 @@ const domContains = (root, thing) => {
     nodeAssert.deepEqual(root, thing);
     return true;
   } catch (err) {
-    if (root.props.children) {
+    if (root.props && root.props.children) {
       const children = root.props.children;
       if (Array.isArray(children)) {
         return children.some(child => domContains(child, thing));
