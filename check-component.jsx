@@ -1,6 +1,8 @@
 const Immutable = require('immutable');
 const { PropTypes: {
+  any,
   bool,
+  func,
   node,
   number,
   string
@@ -11,9 +13,13 @@ const sticky = require('@openride/sticky-test');
 const harness = require('./harness');
 
 
-const generators = Immutable.Map([
+const standardGenerators = Immutable.Map([
+  [any, () =>
+    null],
   [bool, () =>
     Math.random() < 0.5],
+  [func, () =>
+    () => null],
   [node, () =>
     'Strings are nodes'],
   [number, () =>  // TODO specify types of numbers
@@ -22,14 +28,16 @@ const generators = Immutable.Map([
     Immutable.Range(0, Math.floor(Math.random() * 32))  // 0-31 chars
       .map(() => String.fromCharCode(Math.floor(Math.random() * Math.pow(2, 16))))  // random unicode from 16 bits
       .join('')]
-])
-  .flatMap((generator, checker) => Immutable.Map([
+]);
+
+const requiredify = generators =>
+  generators.flatMap((generator, checker) => Immutable.Map([
     [checker.isRequired, generator],
     [checker, () => Math.random() < 0.5 ? generator() : undefined]
   ]));
 
 
-const getProps = propTypes =>
+const getProps = (propTypes, generators) =>
   Object.keys(propTypes)
     .map(name => ({
       name,
@@ -68,10 +76,12 @@ const checkProps = tree => {
 };
 
 
-const checkComponent = (Component, invariants = []) => {
+const checkComponent = (Component, invariants = [], extraGenerators = Immutable.Map()) => {
   if (!Component.propTypes) {
     throw new Error(`No propTypes to check for <${Component.displayName || Component.name || 'anonymous'}>`);
   }
+  const generators = requiredify(standardGenerators.merge(extraGenerators));
+
   test(`Check component <${Component.displayName || Component.name || 'anonymous'}>`, (assert, renderer) => {
     let renderOk = true;
     let invariantsOk = Immutable.Range(0, invariants.length)
@@ -79,20 +89,26 @@ const checkComponent = (Component, invariants = []) => {
       .toList();
 
     Immutable.Range(0, 50).forEach(() => {
-      const props = getProps(Component.propTypes);
+      const props = getProps(Component.propTypes, generators);
       const repr = JSON.stringify(props);
       try {
         renderer.render((<Component {...props} />));
       } catch (err) {
         renderOk = false;
-        assert.fail(`${String(err)}\nprops: ${JSON.stringify(repr)}`);
+        assert.fail(`${String(err)} | props: ${repr}`);
       }
-      const result = renderer.getRenderOutput();
+      let result;
+      try {
+        result = renderer.getRenderOutput();
+      } catch (err) {
+        assert.fail(`failed (throwing); props: ${repr}`);
+        throw err;
+      }
       checkProps(result);
       invariants.forEach(({ description, check }, i) => {
         if (invariantsOk.get(i) && !check(props, result)) {
           invariantsOk = invariantsOk.set(i, false);
-          assert.fail(`Invariant violation: ${description} | props: ${JSON.stringify(props)}`);
+          assert.fail(`Invariant violation: ${description} | props: ${props}`);
         }
       });
     });
