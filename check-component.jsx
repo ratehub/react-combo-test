@@ -75,7 +75,8 @@ const checkComponent = (Component, invariants = []) => {
   test(`Check component <${Component.displayName || Component.name || 'anonymous'}>`, (assert, renderer) => {
     let renderOk = true;
     let invariantsOk = Immutable.Range(0, invariants.length)
-      .map(() => true);
+      .map(() => true)
+      .toList();
 
     Immutable.Range(0, 50).forEach(() => {
       const props = getProps(Component.propTypes);
