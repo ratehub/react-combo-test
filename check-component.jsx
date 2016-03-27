@@ -48,7 +48,30 @@ const test = harness((description) => sticky.compose(
 ));
 
 
-const checkComponent = (Component, invariants = []) =>
+const checkProps = tree => {
+  if (tree && tree.type && tree.type.propTypes) {
+    Object.keys(tree.type.propTypes)
+      .forEach(prop => {
+        const checkResult = tree.type.propTypes[prop](tree.props, prop, tree.type.displayName || tree.type.name || '<<anonymous>>');
+        if (checkResult) {
+          throw checkResult;
+        }
+      });
+  }
+  if (tree && tree.props && tree.props.children) {
+    if (Array.isArray(tree.props.children)) {
+      tree.props.children.forEach(checkProps);
+    } else {
+      checkProps(tree.props.children);
+    }
+  }
+};
+
+
+const checkComponent = (Component, invariants = []) => {
+  if (!Component.propTypes) {
+    throw new Error(`No propTypes to check for <${Component.displayName || Component.name || 'anonymous'}>`);
+  }
   test(`Check component <${Component.displayName || Component.name || 'anonymous'}>`, (assert, renderer) => {
     let renderOk = true;
     let invariantsOk = Immutable.Range(0, invariants.length)
@@ -64,6 +87,7 @@ const checkComponent = (Component, invariants = []) =>
         assert.fail(`${String(err)}\nprops: ${JSON.stringify(repr)}`);
       }
       const result = renderer.getRenderOutput();
+      checkProps(result);
       invariants.forEach(({ description, check }, i) => {
         if (invariantsOk.get(i) && !check(props, result)) {
           invariantsOk = invariantsOk.set(i, false);
@@ -79,6 +103,6 @@ const checkComponent = (Component, invariants = []) =>
       .forEach(({ description }) =>
         assert.pass(`Invariant held: ${description}`));
   });
-
+};
 
 module.exports = checkComponent;
