@@ -39,7 +39,7 @@ const requiredify = generators =>
 
 const getProps = (propTypes, generators) =>
   Object.keys(propTypes)
-    .map(name => ({
+    .map(name => console.log('g', name, generators.get(propTypes[name])) || ({
       name,
       value: generators.get(propTypes[name])()
     }))
