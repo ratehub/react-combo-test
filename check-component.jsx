@@ -1,7 +1,10 @@
-const React = require('react');
-const ReactTestUtils = require('react-addons-test-utils');
-const sticky = require('@openride/sticky-test');
-const harness = require('./harness');
+import React from 'react';
+import ReactTestUtils from 'react-addons-test-utils';
+import sticky from '@openride/sticky-test';
+import harness from './harness';
+import checkPropValues from './util/check-prop-values';
+import checkProps from './util/check-props';
+import propCombos from './util/prop-combos';
 
 
 const test = harness((description) => sticky.compose(
@@ -10,70 +13,6 @@ const test = harness((description) => sticky.compose(
   sticky.timeout(100),
   sticky.inject(ReactTestUtils.createRenderer())
 ));
-
-
-const checkProps = tree => {
-  if (tree && tree.type && tree.type.propTypes) {
-    Object.keys(tree.type.propTypes)
-      .forEach(prop => {
-        const checkResult = tree.type.propTypes[prop](tree.props, prop, tree.type.displayName || tree.type.name || '<<anonymous>>');
-        if (checkResult) {
-          throw checkResult;
-        }
-      });
-  }
-  if (tree && tree.props && tree.props.children) {
-    if (Array.isArray(tree.props.children)) {
-      tree.props.children.forEach(checkProps);
-    } else {
-      checkProps(tree.props.children);
-    }
-  }
-};
-
-
-const checkPropValues = (propTypes, propValues, name) => {
-  for (const prop of Object.keys(propTypes)) {
-    for (const value of propValues[prop]) {
-      const result = propTypes[prop]({ prop: value }, 'prop', name, 'prop');
-      if (result) {
-        return result;
-      }
-    }
-  }
-};
-
-
-const mult = (vec, vecs) => vec
-  .map(v => vecs.map(vv => [v].concat(vv)))  // prepend v to every vec
-  .reduce((a, b) => a.concat(b));  // join all the [[]]s
-
-
-const combos = arrayOfArrays => {
-  const [x, ...xs] = arrayOfArrays;
-  if (!x) {
-    return [];
-  } else if (!xs.length) {
-    return x.map(v => [v]);
-  } else {
-    return mult(x, combos(xs));
-  }
-};
-
-
-const zipObj = (keys, values) => {
-  const out = {};
-  keys.forEach((k, i) => out[k] = values[i]);
-  return out;
-};
-
-
-const propCombos = props => {
-  const keys = Object.keys(props);
-  const values = keys.map(k => props[k]);
-  const valueCombos = combos(values);
-  return valueCombos.map(combo => zipObj(keys, combo));
-};
 
 
 const checkComponent = (Component, {
