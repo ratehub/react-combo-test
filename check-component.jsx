@@ -3,6 +3,7 @@ import ReactTestUtils from 'react-addons-test-utils';
 import sticky from '@openride/sticky-test';
 import harness from './harness';
 import checkPropValues from './util/check-prop-values';
+import checkInvariants from './util/check-invariants';
 import checkProps from './util/check-props';
 import propCombos from './util/prop-combos';
 
@@ -16,10 +17,12 @@ const test = harness((description) => sticky.compose(
 
 
 const checkComponent = (Component, {
-  props: propValues
+  props: propValues,
+  invariants = []
 }) => test(`<${Component.displayName || Component.name} /> renders without throwing`, (assert, renderer) => {
 
   let renderOk = true;
+  let invariantCount = 0;
   const name = Component.displayName || Component.name || 'UnnamedComponent';
 
   if (!Component.propTypes) {
@@ -45,15 +48,29 @@ const checkComponent = (Component, {
       assert.fail(`${String(err)} | props: ${JSON.stringify(props)}`);
       continue;
     }
+
+    const output = renderer.getRenderOutput();
+
     try {
-      checkProps(renderer.getRenderOutput());
+      checkProps(output);
     } catch (err) {
       renderOk = false;
       assert.fail(`${String(err)} | props: ${JSON.stringify(props)}`);
+      continue;
     }
+
+    try {
+      invariantCount += checkInvariants(invariants, props, output);
+    } catch (err) {
+      renderOk = false;
+      assert.fail(`${String(err)} | props: ${JSON.stringify(props)}`);
+      continue;
+    }
+
   }
+
   if (renderOk) {
-    assert.pass(`Rendered ${cs.length} combinations of props for ${name} without throwing`);
+    assert.pass(`Rendered ${cs.length} combinations of props satisfying ${invariantCount} invariant checks for ${name}`);
   }
 });
 
