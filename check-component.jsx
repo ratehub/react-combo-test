@@ -16,28 +16,39 @@ const test = harness((description) => sticky.compose(
 ));
 
 
+const typify = obj =>
+  Object.keys(obj)
+    .map(k => `${k}: ${typeof obj[k]}`)
+    .join(', ');
+
+
 const checkComponent = (Component, {
-  props: propValues,
+  props: propValues = {},
   invariants = []
 }) => test(`<${Component.displayName || Component.name} /> renders without throwing`, (assert, renderer) => {
 
   let renderOk = true;
   let invariantCount = 0;
   const name = Component.displayName || Component.name || 'UnnamedComponent';
+  const propTypes = Component.propTypes || {};
 
-  if (!Component.propTypes) {
-    throw new Error(`No propTypes to check for <${name} />`);
-  }
-
-  const propValueErr = checkPropValues(Component.propTypes, propValues);
+  const propValueErr = checkPropValues(propTypes, propValues, name);
   if (propValueErr) {
     assert.fail(`Bad prop value: ${String(propValueErr)}`);
   }
 
-  const cs = propCombos(propValues);
+  let cs = propCombos(propValues);
   if (cs.length === 0) {
-    renderOk = false;
-    assert.fail('no prop combos to try');
+    const nProps = Object.keys(propTypes).length;
+    const nValueProps = Object.keys(propValues).length;
+    if (nProps === 0 &&
+        nValueProps === 0) {
+      // a static component with no props to test with can still be checked with a propless render
+      cs = [{}];
+    } else {
+      renderOk = false;
+      assert.fail('no prop combos to try');
+    }
   }
 
   for (const props of cs) {
@@ -45,7 +56,7 @@ const checkComponent = (Component, {
       renderer.render((<Component {...props} />));
     } catch (err) {
       renderOk = false;
-      assert.fail(`${String(err)} | props: ${JSON.stringify(props)}`);
+      assert.fail(`${String(err)} | props: ${typify(props)}`);
       continue;
     }
 
@@ -55,7 +66,7 @@ const checkComponent = (Component, {
       checkProps(output);
     } catch (err) {
       renderOk = false;
-      assert.fail(`${String(err)} | props: ${JSON.stringify(props)}`);
+      assert.fail(`${String(err)} | props: ${typify(props)}`);
       continue;
     }
 
@@ -63,7 +74,7 @@ const checkComponent = (Component, {
       invariantCount += checkInvariants(invariants, props, output);
     } catch (err) {
       renderOk = false;
-      assert.fail(`${String(err)} | props: ${JSON.stringify(props)}`);
+      assert.fail(`${String(err)} | props: ${typify(props)}`);
       continue;
     }
 
