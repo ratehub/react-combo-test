@@ -23,9 +23,10 @@ const typify = obj =>
 
 
 const checkComponent = (Component, {
+  description = 'renders without throwing',
   props: propValues = {},
   invariants = []
-}) => test(`<${Component.displayName || Component.name} /> renders without throwing`, (assert, renderer) => {
+} = {}) => test(`<${Component.displayName || Component.name} /> ${description}`, (assert, renderer) => {
 
   let renderOk = true;
   let invariantCount = 0;
