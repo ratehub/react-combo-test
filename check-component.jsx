@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
 import sticky from '@openride/sticky-test';
 import harness from './harness';
@@ -6,7 +6,9 @@ import checkPropValues from './util/check-prop-values';
 import checkInvariants from './util/check-invariants';
 import checkProps from './util/check-props';
 import propCombos from './util/prop-combos';
+import DeviceType, { Phone, Desktop } from '../app/components/device-type.js';
 
+const { instanceOf } = PropTypes;
 
 const test = harness((description) => sticky.compose(
   sticky.declare(description),
@@ -15,6 +17,7 @@ const test = harness((description) => sticky.compose(
   sticky.inject(ReactTestUtils.createRenderer())
 ));
 
+const DEVICE_TYPES = [ Phone(), Desktop() ];
 
 const typify = obj =>
   Object.keys(obj)
@@ -54,7 +57,9 @@ const checkComponent = (Component, {
 
   for (const props of cs) {
     try {
-      renderer.render((<Component {...props} />));
+      DEVICE_TYPES.forEach(deviceType => {
+        renderer.render((<Component {...props} />), { deviceType });        
+      });
     } catch (err) {
       renderOk = false;
       assert.fail(`${String(err)} | props: ${typify(props)}`);
