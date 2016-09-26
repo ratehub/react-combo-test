@@ -58,7 +58,12 @@ const checkComponent = (Component, {
   for (const props of cs) {
     try {
       DEVICE_TYPES.forEach(deviceType => {
-        renderer.render((<Component {...props} />), { deviceType });        
+        try {
+          renderer.render((<Component {...props} />), { deviceType });        
+        } catch (err) {
+          renderOk = false;
+          assert.fail(`${String(err)} | props: ${typify(props)} | deviceType: ${deviceType.toString()}`);
+        }
       });
     } catch (err) {
       renderOk = false;
