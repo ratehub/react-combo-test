@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
 import sticky from '@openride/sticky-test';
 import harness from './harness';
@@ -6,9 +6,7 @@ import checkPropValues from './util/check-prop-values';
 import checkInvariants from './util/check-invariants';
 import checkProps from './util/check-props';
 import propCombos from './util/prop-combos';
-import DeviceType, { Phone, Desktop } from '../app/components/device-type.js';
-
-const { instanceOf } = PropTypes;
+import { Phone, Desktop } from '../app/components/device-type.js';
 
 const test = harness((description) => sticky.compose(
   sticky.declare(description),
