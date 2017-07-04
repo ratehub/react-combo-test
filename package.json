@@ -9,7 +9,6 @@
   "author": "uniphil",
   "license": "MIT",
   "dependencies": {
-    "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-test-renderer": "^15.6.1"
@@ -17,6 +16,10 @@
   "devDependencies": {
     "babel-preset-env": "^1.6.0",
     "babel-register": "^6.24.1",
+    "prop-types": "^15.5.10",
     "tape": "^4.7.0"
+  },
+  "peerDependencies": {
+    "prop-types": "^15.5.10"
   }
 }

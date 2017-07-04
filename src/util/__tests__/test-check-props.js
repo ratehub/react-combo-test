@@ -1,20 +1,17 @@
-import React, { PropTypes } from 'react';
-import ReactTestUtils from 'react-addons-test-utils';
+import tape from 'tape';
+import React from 'react';
+import PropTypes from 'prop-types';
+import Shallow from 'react-test-renderer/shallow';
 import checkProps from '../check-props';
 
 
-const test = harness((plan, description, Component) =>
-  sticky.compose(
-    sticky.declare(description),
-    sticky.countAsserts(plan),
-    sticky.timeout(100),
-    sticky.injectFactory(() => {
-      const renderer = ReactTestUtils.createRenderer();
-      renderer.render(React.createElement(Component));
-      const output = renderer.getRenderOutput();
-      return sticky.inject(output);
-    })
-  ));
+const test = (plan, description, Component, testFn) =>
+  tape(description, assert => {
+    const renderer = new Shallow();
+    renderer.render(React.createElement(Component));
+    const output = renderer.getRenderOutput();
+    testFn(assert, output);
+  });
 
 
 const check = (Component, shouldPass, description) =>

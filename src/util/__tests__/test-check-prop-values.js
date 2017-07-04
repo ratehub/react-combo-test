@@ -1,5 +1,5 @@
 import test from 'tape';
-import { PropTypes } from 'react';
+import PropTypes from 'prop-types';
 import checkPropValues from '../check-prop-values';
 
 
