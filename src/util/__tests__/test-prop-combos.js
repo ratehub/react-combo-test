@@ -1,4 +1,4 @@
-import test from '../../test-simple';
+import test from 'tape';
 import propCombos from '../prop-combos';
 
 

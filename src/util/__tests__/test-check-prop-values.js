@@ -1,4 +1,4 @@
-import test from 'test-utils/test-simple';
+import test from 'tape';
 import { PropTypes } from 'react';
 import checkPropValues from '../check-prop-values';
 
