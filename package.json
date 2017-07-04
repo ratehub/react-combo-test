@@ -4,7 +4,7 @@
   "description": "Check combinations of prop and context values for stateless components",
   "main": "src/index.js",
   "scripts": {
-    "test": "tape -r babel-register '**/__tests__/test-*.js'"
+    "test": "tape -r babel-register '**/__tests__/test-*.js' | tap-dot"
   },
   "author": "uniphil",
   "license": "MIT",
@@ -17,6 +17,7 @@
     "babel-preset-env": "^1.6.0",
     "babel-register": "^6.24.1",
     "prop-types": "^15.5.10",
+    "tap-dot": "^1.0.5",
     "tape": "^4.7.0"
   },
   "peerDependencies": {
