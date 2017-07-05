@@ -1,19 +1,18 @@
 const React = require('react');
 const Shallow = require('react-test-renderer/shallow');
 const failConsoleErrors = require('./failConsoleErrors');
+const getName = require('./getName');
 
 const checkWithProps = (Component, props) => {
-  const name = Component.displayName || Component.name || '<<Anonymous>>';
-
   const componentProps = Object.keys(Component.propTypes || {});
   const checkingProps = Object.keys(props);
 
   let missing;
   if (missing = componentProps.find(name => !checkingProps.includes(name))) {
-    return new Error(`No sample provided for prop: ${missing}`);
+    return `Missing samples for ${getName(Component)}.propTypes.${missing}`;
   }
   if (missing = checkingProps.find(name => !componentProps.includes(name))) {
-    return new Error(`Sample provided for a prop without proptype: ${name}`);
+    return `Prop '${missing}' is not in ${getName(Component)}.propTypes`;
   }
 
   const renderer = new Shallow();
@@ -25,7 +24,7 @@ const checkWithProps = (Component, props) => {
     try {
       renderer.render(React.createElement(Component, props));
     } catch (err_) {
-      err = new Error(`Component '${name}' threw while rendering: ${err_}`);
+      err = `${getName(Component)} exploded while rendering: ${err_}`;
     }
   });
 

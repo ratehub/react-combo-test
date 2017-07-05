@@ -1,5 +1,6 @@
 const getCombos = require('./getCombos');
 const checkWithProps = require('./checkWithProps');
+const getName = require('./getName');
 
 
 const comboTest = (Component, options) => {
@@ -24,10 +25,10 @@ const comboTest = (Component, options) => {
 
   if (error) {
     const fail = assert.fail || (msg => assert(false, msg));
-    fail(error);
+    fail(`<${getName(Component)}> failed checking: ${error}`);
   } else {
     const ok = assert.pass || (msg => assert(true, msg));
-    ok(`Ok <${Component.displayName || Component.name}>`);
+    ok(`<${getName(Component)}> passed ${combos.length || 1} checks`);
   }
 };
 
