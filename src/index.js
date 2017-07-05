@@ -11,15 +11,23 @@ const comboTest = (Component, options) => {
   })();
   const assert = options.assert || require('assert');
 
-  const error = getCombos(propSamples).find(props =>
-    checkWithProps(Component, props));
+  const combos = getCombos(propSamples);
+  let error;
+
+  if (combos.length === 0) {
+    error = checkWithProps(Component, {});
+  } else {
+    error = combos.reduce((err, props) =>
+      err || checkWithProps(Component, props)
+      , null);
+  }
 
   if (error) {
     const fail = assert.fail || (msg => assert(false, msg));
-    fail('booo');
+    fail(error);
   } else {
     const ok = assert.pass || (msg => assert(true, msg));
-    ok('wooo');
+    ok(`Ok <${Component.displayName || Component.name}>`);
   }
 };
 

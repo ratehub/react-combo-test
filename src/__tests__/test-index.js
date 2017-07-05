@@ -29,6 +29,10 @@ ComponentPassingPropsBadly.propTypes = {
   x: PropTypes.string.isRequired,
 };
 
+const BrokenComponent = () => {
+  throw new Error('I am a broken component');
+};
+
 const ComponentWithoutPropsPassingPropsBadly = () =>
   React.createElement(ComponentWithProps);
 
@@ -55,10 +59,10 @@ test('Component without props fails if props are provided', assert => {
 });
 
 test('ComponentWithProps', assert => {
-  assert.plan(5);
+  assert.plan(6);
   comboTest(ComponentWithProps, {
     assert,
-    props: { x: [1] },
+    props: { x: [1], y: [undefined] },
   });
   comboTest(ComponentWithProps, {
     assert,
@@ -76,6 +80,13 @@ test('ComponentWithProps', assert => {
     assert: flip(assert),
     props: { x: [1], y: [true] },
   });
+  comboTest(ComponentWithProps, {
+    assert: assert,
+    props: {
+      x: [0, 1, -1],
+      y: [undefined, '', 'abc'],
+    },
+  });
 });
 
 test('Component Passing Props to children', assert => {
@@ -92,4 +103,9 @@ test('Component Passing Props to children', assert => {
     assert: flip(assert),
     props: {},
   });
+});
+
+test('Components that throw fail checking', assert => {
+  assert.plan(1);
+  comboTest(BrokenComponent, { assert: flip(assert), props: {} });
 });
