@@ -33,7 +33,7 @@ const componentInvariants = (Component, defaultProps, invariants) => {
       .trim()
     )(inv.assert.toString());
     test(testDeclaration, inv.when, (assert, output) =>
-        assert(inv.assert(output), assertBody));
+      assert(inv.assert(output), assertBody));
   });
 };
 

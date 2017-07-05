@@ -9,12 +9,10 @@ const domContains = (root, thing) => {
       const children = root.props.children;
       if (Array.isArray(children)) {
         return children.some(child => domContains(child, thing));
-      } else {
-        return domContains(children, thing);
       }
-    } else {
-      return false;
+      return domContains(children, thing);
     }
+    return false;
   }
 };
 

@@ -3,7 +3,7 @@ const PropTypes = require('prop-types');
 const Shallow = require('react-test-renderer/shallow');
 
 const Child = () => {
-  throw new Error("hi")
+  throw new Error('hi')
 };
 Child.propTypes = {
   a: PropTypes.string.isRequired,
@@ -19,5 +19,3 @@ const renderer = new Shallow();
 renderer.render(React.createElement(Parent, null));
 
 const result = renderer.getRenderOutput();
-
-console.log({ result });
