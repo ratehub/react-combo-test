@@ -7,6 +7,7 @@ import checkProps from '../check-props';
 
 const test = (plan, description, Component, testFn) =>
   tape(description, assert => {
+    assert.plan(1);
     const renderer = new Shallow();
     renderer.render(React.createElement(Component));
     const output = renderer.getRenderOutput();
@@ -17,12 +18,15 @@ const test = (plan, description, Component, testFn) =>
 const check = (Component, shouldPass, description) =>
   test(1, description, Component, (assert, output) => {
     let passed = true;
+    let err;
     try {
       checkProps(output);
-    } catch (err) {
+    } catch (err_) {
+      err = err_;
       passed = false;
     }
     if (passed !== shouldPass) {
+      console.error({ err });
       assert.fail(description);
     } else {
       assert.pass(description);

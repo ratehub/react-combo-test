@@ -6,7 +6,7 @@ const checkPropValues = (propTypes, propValues, name) => {
       values = [undefined];  // allow missing optional props to be unspecified: check with `undefined`
     }
     for (const value of values) {
-      const propValueError = propTypes[prop]({ [prop]: value }, prop, name, 'prop');
+      const propValueError = propTypes[prop]({ [prop]: value }, prop, name, 'prop', null, 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED');
       if (propValueError) {
         return `Err: ${String(propValueError)} | PropName: ${name} | Value: ${String(value)}`;
       }

@@ -2,11 +2,15 @@ import test from 'tape';
 import propCombos from '../prop-combos';
 
 
-test(1, 'propCombos should throw if any prop has zero values', assert =>
-  assert.throws(() => propCombos({ a: [] }), 'should throw for empty prop value array'));
+test('propCombos should throw if any prop has zero values', assert => {
+  assert.plan(1);
+  assert.throws(() => propCombos({ a: [] }), 'should throw for empty prop value array');
+});
 
 
-test(6, 'propCombos should make all the combos', assert => {
+test('propCombos should make all the combos', assert => {
+  assert.plan(6);
+
   assert.deepEqual(
     propCombos({}),
     [],

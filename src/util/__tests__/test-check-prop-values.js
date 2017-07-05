@@ -4,7 +4,8 @@ import checkPropValues from '../check-prop-values';
 
 
 const check = (description, propTypes, props, shouldPass) =>
-  test(1, description, assert => {
+  test(description, assert => {
+    assert.plan(1);
     const res = checkPropValues(propTypes, props, 'TestCheckPropValues');
     const passed = typeof res === 'undefined';
     if (passed !== shouldPass) {
