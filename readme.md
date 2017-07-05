@@ -23,11 +23,11 @@ React combo test is currently test framework agnostic: it just throws to fail. F
 
 ```js
 import test from 'tape';
-import ComboTest from 'react-combo-test';
+import comboTest from 'react-combo-test';
 import MyComponent from '../wherever';
 
 test('MyComponent renders without crashing', () =>
-  ComboTest(MyComponent, {
+  comboTest(MyComponent, {
     props: {
       colour: ['red', '#BAD', 'rgba(4, 3, 2, 1)'],
       interactive: [true, false, undefined],
@@ -37,15 +37,15 @@ test('MyComponent renders without crashing', () =>
 
 In this case, `MyComponent` will be shallow-rendered nine times, checking every combination of the sample props (eg, `<MyComponent colour="red", interactive={true} />`, `<MyComponent colour="red" interactive={false} />`, ...).
 
-You can also pass your test framework's `assert` to `ComboTest` for better failure reporting. Again with tape:
+You can also pass your test framework's `assert` to `comboTest` for better failure reporting. Again with tape:
 
 ```js
 import test from 'tape';
-import ComboTest from 'react-combo-test';
+import comboTest from 'react-combo-test';
 import MyComponent from '../wherever';
 
 test('MyComponent renders without crashing', assert =>
-  ComboTest(MyComponent, {
+  comboTest(MyComponent, {
     assert,
     props: {
       colour: ['red', '#BAD', 'rgba(4, 3, 2, 1)'],
