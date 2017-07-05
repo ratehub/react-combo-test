@@ -1,6 +1,6 @@
-import test from 'tape';
-import PropTypes from 'prop-types';
-import checkPropValues from '../check-prop-values';
+const test = require('tape');
+const PropTypes = require('prop-types');
+const checkPropValues = require('../check-prop-values');
 
 
 const check = (description, propTypes, props, shouldPass) =>

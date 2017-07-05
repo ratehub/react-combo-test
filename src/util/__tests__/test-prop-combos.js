@@ -1,5 +1,5 @@
-import test from 'tape';
-import propCombos from '../prop-combos';
+const test = require('tape');
+const propCombos = require('../prop-combos');
 
 
 test('propCombos should throw if any prop has zero values', assert => {

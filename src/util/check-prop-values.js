@@ -14,4 +14,4 @@ const checkPropValues = (propTypes, propValues, name) => {
   }
 };
 
-export default checkPropValues;
+module.exports = checkPropValues;

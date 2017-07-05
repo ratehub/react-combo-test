@@ -4,7 +4,8 @@
   "description": "Check combinations of prop and context values for stateless components",
   "main": "src/index.js",
   "scripts": {
-    "test": "tape -r babel-register '**/__tests__/test-*.js' | tap-dot"
+    "test": "tape '**/__tests__/test-*.js'",
+    "watch:test": "nodemon -w '**/*.js' -x 'npm t | tap-dot'"
   },
   "author": "uniphil",
   "contributors": [
@@ -18,8 +19,7 @@
     "react-test-renderer": "^15.6.1"
   },
   "devDependencies": {
-    "babel-preset-env": "^1.6.0",
-    "babel-register": "^6.24.1",
+    "nodemon": "^1.11.0",
     "prop-types": "^15.5.10",
     "tap-dot": "^1.0.5",
     "tape": "^4.7.0"

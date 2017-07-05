@@ -1,12 +1,12 @@
-import React from 'react';
-import ReactTestUtils from 'react-addons-test-utils';
-import sticky from '@openride/sticky-test';
-import harness from './harness';
-import checkPropValues from './util/check-prop-values';
-import checkInvariants from './util/check-invariants';
-import checkProps from './util/check-props';
-import propCombos from './util/prop-combos';
-import { Phone, Desktop } from '../app/components/device-type.js';
+const React = require('react');
+const ReactTestUtils = require('react-addons-test-utils');
+const sticky = require('@openride/sticky-test');
+const harness = require('./harness');
+const checkPropValues = require('./util/check-prop-values');
+const checkInvariants = require('./util/check-invariants');
+const checkProps = require('./util/check-props');
+const propCombos = require('./util/prop-combos');
+const { Phone, Desktop } = require('../app/components/device-type.js');
 
 const test = harness((description) => sticky.compose(
   sticky.declare(description),

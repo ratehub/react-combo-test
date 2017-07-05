@@ -18,4 +18,4 @@ const checkProps = tree => {
 };
 
 
-export default checkProps;
+module.exports = checkProps;

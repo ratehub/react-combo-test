@@ -15,4 +15,4 @@ const checkInvariants = (invariants, props, output) => {
 };
 
 
-export default checkInvariants;
+module.exports = checkInvariants;

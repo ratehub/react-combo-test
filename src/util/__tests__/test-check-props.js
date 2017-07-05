@@ -1,8 +1,8 @@
-import tape from 'tape';
-import React from 'react';
-import PropTypes from 'prop-types';
-import Shallow from 'react-test-renderer/shallow';
-import checkProps from '../check-props';
+const tape = require('tape');
+const React = require('react');
+const PropTypes = require('prop-types');
+const Shallow = require('react-test-renderer/shallow');
+const checkProps = require('../check-props');
 
 
 const test = (plan, description, Component, testFn) =>

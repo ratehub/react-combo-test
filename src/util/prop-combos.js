@@ -33,4 +33,4 @@ const propCombos = props => {
 };
 
 
-export default propCombos;
+module.exports = propCombos;
