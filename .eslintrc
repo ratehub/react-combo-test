@@ -1,0 +1,26 @@
+{
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "rules": {
+    "arrow-body-style": "off",
+    "comma-dangle": "off",
+    "curly": ["error", "multi-line"],
+    "global-require": "off",
+    "indent": "error",
+    "max-len": "error",
+    "no-confusing-arrow": "error",
+    "no-console": "error",
+    "no-else-return": "error",
+    "no-nested-ternary": "error",
+    "no-param-reassign": "error",
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+    "no-underscore-dangle": ["error"],
+    "no-undef": "error",
+    "object-curly-spacing": "error",
+    "quote-props": ["error", "consistent-as-needed"],
+    "quotes": ["error", "single"],
+    "strict": ["error", "never"],
+  },
+}
