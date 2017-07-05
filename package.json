@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "Check combinations of prop and context values for stateless components",
   "main": "src/index.js",
+  "engines" : {
+    "node" : ">=6.0.0"
+  },
   "scripts": {
     "lint": "eslint **/*.js",
     "test": "tape '**/__tests__/test-*.js'",
