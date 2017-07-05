@@ -7,6 +7,10 @@
     "test": "tape -r babel-register '**/__tests__/test-*.js' | tap-dot"
   },
   "author": "uniphil",
+  "contributors": [
+    "uniphil",
+    "owenscott"
+  ],
   "license": "MIT",
   "dependencies": {
     "react": "^15.6.1",
