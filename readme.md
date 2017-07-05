@@ -1,5 +1,7 @@
 # React combo test
 
+[![Build Status](https://travis-ci.org/uniphil/react-combo-test.svg?branch=master)](https://travis-ci.org/uniphil/react-combo-test)
+
 Typecheck stateless component trees via [PropTypes](https://github.com/facebook/prop-types). You get weaker guarantees than real typechecking (eg., with [typescript](https://github.com/Microsoft/TypeScript-React-Starter#creating-a-component)), but it's easier to set up and maintain.
 
 This library helps you gain confidence about two things:
