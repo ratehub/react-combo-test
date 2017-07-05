@@ -1,21 +1,27 @@
-const React = require('react');
-const PropTypes = require('prop-types');
-const Shallow = require('react-test-renderer/shallow');
+const getCombos = require('./getCombos');
+const checkWithProps = require('./checkWithProps');
 
-const Child = () => {
-  throw new Error('hi')
+
+const comboTest = (Component, options) => {
+  if (typeof Component === 'undefined') {
+    throw new Error('You must provide a Component for comboTest');
+  }
+  const propSamples = options.props || (() => {
+    throw new Error('You must provide some sample props comboTest');
+  })();
+  const assert = options.assert || require('assert');
+
+  const error = getCombos(propSamples).find(props =>
+    checkWithProps(Component, props));
+
+  if (error) {
+    const fail = assert.fail || (msg => assert(false, msg));
+    fail('booo');
+  } else {
+    const ok = assert.pass || (msg => assert(true, msg));
+    ok('wooo');
+  }
 };
-Child.propTypes = {
-  a: PropTypes.string.isRequired,
-};
 
-const Parent = () => {
-  React.createElement('div', null,
-    React.createElement(Child, null)
-  );
-};
-const renderer = new Shallow();
 
-renderer.render(React.createElement(Parent, null));
-
-const result = renderer.getRenderOutput();
+module.exports = comboTest;
