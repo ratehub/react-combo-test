@@ -1,34 +1,42 @@
 const React = require('react');
 const Shallow = require('react-test-renderer/shallow');
-const failConsoleErrors = require('./failConsoleErrors');
+const checkPropTypes = require('check-prop-types');
+const silenceReactWarnings = require('./silenceReactWarnings');
 const getName = require('./getName');
 
-const checkWithProps = (Component, props) => {
-  const componentProps = Object.keys(Component.propTypes || {});
-  const checkingProps = Object.keys(props);
 
-  let missing;
-  if (missing = componentProps.find(name => !checkingProps.includes(name))) {
-    return `Missing samples for ${getName(Component)}.propTypes.${missing}`;
+const checkChildren = jsx => {
+  if (!jsx) return;
+  const { type: Component, props } = jsx;
+  if (Component && Component.propTypes) {
+    return checkWithProps(Component, props);
   }
-  if (missing = checkingProps.find(name => !componentProps.includes(name))) {
-    return `Prop '${missing}' is not in ${getName(Component)}.propTypes`;
-  }
-
-  const renderer = new Shallow();
-  let err;
-  const onFail = err_ =>
-    err = err_;
-
-  failConsoleErrors(onFail, () => {
-    try {
-      renderer.render(React.createElement(Component, props));
-    } catch (err_) {
-      err = `${getName(Component)} exploded while rendering: ${err_}`;
+  if (props && props.children) {
+    if (!Array.isArray(props.children)) {
+      return props.children.reduce((err, child) =>
+        err || checkChildren(child)
+        , null);
     }
-  });
+    return checkChildren(props.children);
+  }
+}
 
-  return err;
+
+const checkWithProps = (Component, props) => {
+  // check the component's props
+  const propError = checkPropTypes(Component.propTypes, props, 'prop',
+    getName(Component));
+  if (propError) return propError;
+
+  // recurse for all child components
+  const renderer = new Shallow();
+  try {
+    silenceReactWarnings(() =>
+      renderer.render(React.createElement(Component, props)));
+  } catch (exc) {
+    return `${getName(Component)} exploded while rendering: ${exc}`;
+  }
+  return checkChildren(renderer.getRenderOutput());
 };
 
 

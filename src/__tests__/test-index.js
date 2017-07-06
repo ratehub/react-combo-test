@@ -49,13 +49,17 @@ test('Component without props is ok', assert => {
   comboTest(ComponentWithEmptyProps, { assert, props });
 });
 
-test('Component without props fails if props are provided', assert => {
+test('Component without props ignores extra props', assert => {
+  // originally the plan was to fail in this case, but that doesn't work:
+  // HOCs and other components that just pass all props to a child don't inherit
+  // their propTypes, so we actually just can't know what's valid to pass as
+  // props in and what's not.
   assert.plan(2);
   const props = {
     badProp: ['booo'],
   };
-  comboTest(ComponentWithoutProps, { assert: flip(assert), props });
-  comboTest(ComponentWithEmptyProps, { assert: flip(assert), props });
+  comboTest(ComponentWithoutProps, { assert, props });
+  comboTest(ComponentWithEmptyProps, { assert, props });
 });
 
 test('ComponentWithProps', assert => {

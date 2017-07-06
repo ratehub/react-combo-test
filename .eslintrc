@@ -10,7 +10,7 @@
     "global-require": "off",
     "indent": ["error", 2],
     "max-len": "error",
-    "no-confusing-arrow": "error",
+    "no-confusing-arrow": "off",
     "no-console": "error",
     "no-else-return": "error",
     "no-nested-ternary": "error",
