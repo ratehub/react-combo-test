@@ -14,8 +14,8 @@ test('getCombos should make all the combos', assert => {
 
   assert.deepEqual(
     getCombos({}),
-    [],
-    'shoudl create zero combos if there are no props');
+    [{}],
+    'shoudl create one set of empty props if there are no prop samples');
 
   assert.deepEqual(
     getCombos({ a: [1] }),

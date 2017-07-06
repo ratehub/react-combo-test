@@ -13,22 +13,16 @@ const comboTest = (Component, options) => {
   const assert = options.assert || require('assert');
 
   const combos = getCombos(propSamples);
-  let error;
-
-  if (combos.length === 0) {
-    error = checkWithProps(Component, {});
-  } else {
-    error = combos.reduce((err, props) =>
-      err || checkWithProps(Component, props)
-      , null);
-  }
+  const error = combos.reduce((err, props) =>
+    err || checkWithProps(Component, props)
+    , null);
 
   if (error) {
     const fail = assert.fail || (msg => assert(false, msg));
     fail(`<${getName(Component)}> failed checking: ${error}`);
   } else {
     const ok = assert.pass || (msg => assert(true, msg));
-    ok(`<${getName(Component)}> passed ${combos.length || 1} checks`);
+    ok(`<${getName(Component)}> passed ${combos.length} checks`);
   }
 };
 

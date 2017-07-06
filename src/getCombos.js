@@ -6,7 +6,7 @@ const mult = (vec, vecs) => vec
 const combos = arrayOfArrays => {
   const [x, ...xs] = arrayOfArrays;
   if (!x) {
-    return [];
+    return [{}];
   } else if (!xs.length) {
     if (!x.length) {
       throw new Error('Every prop must be provided at least one value');
