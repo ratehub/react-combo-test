@@ -109,3 +109,14 @@ test('Components that throw fail checking', assert => {
   assert.plan(1);
   comboTest(BrokenComponent, { assert: flip(assert), props: {} });
 });
+
+test('Failing checks throw if assert is not provided', assert => {
+  assert.plan(2);
+  assert.doesNotThrow(() =>
+    comboTest(ComponentWithoutProps, { props: {} })
+    , 'Nothing explodes when checking succeeds without assert');
+
+  assert.throws(() =>
+    comboTest(ComponentWithProps, { props: {} })
+    , 'Failing checks throw when assert is not provided');
+});
