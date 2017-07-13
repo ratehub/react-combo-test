@@ -11,8 +11,9 @@ const comboTest = (Component, options) => {
     throw new Error('You must provide some sample props comboTest');
   })();
   const assert = options.assert || require('assert');
+  const shouldSkipCombo = options.shouldSkipCombo;
 
-  const combos = getCombos(propSamples);
+  const combos = getCombos(propSamples, shouldSkipCombo);
   const error = combos.reduce((err, props) =>
     err || checkWithProps(Component, props)
     , null);

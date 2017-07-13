@@ -36,6 +36,22 @@ const BrokenComponent = () => {
 const ComponentWithoutPropsPassingPropsBadly = () =>
   React.createElement(ComponentWithProps);
 
+const ComponentWithInvalidCombos = ({ mode, value }) =>
+  ({
+    number: n => {
+      n.toFixed(1);
+      return null;
+    },
+    letter: s => {
+      s.toLowerCase();
+      return null;
+    },
+  })[mode](value);
+ComponentWithInvalidCombos.propTypes = {
+  mode: PropTypes.oneOf(['number', 'letter']).isRequired,
+  value: PropTypes.any.isRequired,
+};
+
 const flip = assert => ({
   pass: assert.fail,
   fail: assert.pass,
@@ -187,4 +203,20 @@ test('Custom ok assert', assert => {
     props: {},
   });
   assert.deepEqual(message, '<ComponentWithoutProps> passed 1 checks');
+});
+
+
+test('Skip invalid combos', assert => {
+  assert.plan(1);
+
+  comboTest(ComponentWithInvalidCombos, {
+    assert,
+    props: {
+      mode: ['number', 'letter'],
+      value: [1, 'a'],
+    },
+    shouldSkipCombo: ({ mode, value }) =>
+      (mode === 'number' && typeof value !== 'number') ||
+      (mode === 'letter' && typeof value !== 'String'),
+  });
 });

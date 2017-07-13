@@ -50,3 +50,18 @@ test('getCombos should make all the combos', assert => {
     ],
     'and even more values...');
 });
+
+test('getCombos skips when shouldSkip() => true', assert => {
+  assert.plan(2);
+  assert.throws(() =>
+    getCombos({ a: [1, 2], b: [3, 4] }, () => true)
+    , 'should error if there are no valid combos to check');
+  assert.deepEqual(
+    getCombos({ a: [1, 2], b: [true, false] }, ({ a, b }) => b && a % 2),
+    [
+      { a: 1, b: false },
+      { a: 2, b: true },
+      { a: 2, b: false },
+    ],
+    'shouldSkip skips only when it returns true');
+});

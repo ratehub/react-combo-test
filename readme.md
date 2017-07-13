@@ -54,15 +54,30 @@ test('MyComponent renders without crashing', assert =>
   }));
 ```
 
-Planned stuff:
+### Skips
 
-- allow "skips": a callback accepting the prop combo that returns true if the component shouldn't be checked with this combination. Needing it points to a deeper data-modeling problem, but who doesn't have those.
+The best way to avoid bad states is to [make them unrepresentable](https://blogs.janestreet.com/effective-ml-revisited/) ([ahem](https://www.npmjs.com/package/results)), but sometimes you're stuck with legacy code where certain combinations of props are invalid and shouldn't be checked. React combo test has an escape hatch for this situation, `shouldSkipCombo(props)`:
+
+```js
+import comboTest from 'react-combo-test';
+
+
+comboTest(AnnoyingComponent, {
+  props: {
+    mode: ['numbers', 'letters'],
+    value: [-1, 0, 1, 'A', 'Z', 'm'],
+  },
+  shouldSkipCombo: ({ mode, value }) =>
+    (mode === 'numbers' && typeof value !== 'number') ||
+    (mode === 'letters' && typeof value !== 'String'),
+});
+```
+
+
+## Planned stuff
+
 - allow "invariants": a callback that accepts the provided props and asserts stuff about the rendered JSX. There are a bunch of existing testing tools for the assertion side of this that will hopefully be compatible.
 
-Possibly useful features to consider:
-
-- add context combos
-- collect extra prop combos for components by walking shallow-render trees and saving the provided props
 
 ## How it works
 

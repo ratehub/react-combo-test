@@ -1,3 +1,6 @@
+const assert = require('assert');
+
+
 const mult = (vec, vecs) => vec
   .map(v => vecs.map(vv => [v].concat(vv)))  // prepend v to every vec
   .reduce((a, b) => a.concat(b));  // join all the [[]]s
@@ -24,11 +27,20 @@ const zipObj = (keys, values) => {
 };
 
 
-const propCombos = props => {
+const propCombos = (props, shouldSkip = () => false) => {
   const keys = Object.keys(props);
   const values = keys.map(k => props[k]);
   const valueCombos = combos(values);
-  return valueCombos.map(combo => zipObj(keys, combo));
+
+  const allCombos = valueCombos.map(combo => zipObj(keys, combo));
+  assert(allCombos.length,
+    'At least one propCombo should always be generated.');
+
+  const testCombos = allCombos.filter(combo => !shouldSkip(combo));
+  assert(testCombos.length,
+    'At least one combo must be valid but shouldSkipCombo rejected them all.');
+
+  return testCombos;
 };
 
 
