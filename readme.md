@@ -120,11 +120,6 @@ comboTest(AnnoyingComponent, {
 ```
 
 
-## Planned stuff
-
-- allow "invariants": a callback that accepts the provided props and asserts stuff about the rendered JSX. There are a bunch of existing testing tools for the assertion side of this that will hopefully be compatible.
-
-
 ## How it works
 
 This library takes a naïve but useful approach that I should write more about in this section.
