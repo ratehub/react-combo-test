@@ -1,6 +1,7 @@
 const test = require('tape');
 const React = require('react');
 const PropTypes = require('prop-types');
+const { shallow } = require('enzyme');
 const comboTest = require('..');
 
 const ComponentWithoutProps = () =>
@@ -51,6 +52,16 @@ ComponentWithInvalidCombos.propTypes = {
   mode: PropTypes.oneOf(['number', 'letter']).isRequired,
   value: PropTypes.any.isRequired,
 };
+
+const LabeledNumber = ({ label, value }) =>
+  React.createElement('p', {}, [
+    label && React.createElement('span', { className: 'label' }, [ label ]),
+  ]);
+LabeledNumber.propTypes = {
+  label: PropTypes.string.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
 
 const flip = assert => ({
   pass: assert.fail,
@@ -219,4 +230,32 @@ test('Skip invalid combos', assert => {
       (mode === 'number' && typeof value !== 'number') ||
       (mode === 'letter' && typeof value !== 'String'),
   });
+});
+
+
+test('Invariants are checked', assert => {
+  assert.plan(2);
+  let checked = false;
+
+  comboTest(LabeledNumber, {
+    assert,
+    props: {
+      label: ['', 'A', 'zed'],
+      value: [-1, 0, 1],
+    },
+    check: (jsx, invariant, props) => {
+      checked = true;
+      const wrapper = shallow(jsx);
+      const label = wrapper.find('.label');
+      if (props.label.length) {
+        invariant(label.exists(),
+          'A label is rendered when label is not empty');
+      } else {
+        invariant(!label.exists(),
+          'No label is rendered when label is empty');
+      }
+    },
+  });
+
+  assert.ok(checked);
 });

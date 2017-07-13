@@ -12,10 +12,11 @@ const comboTest = (Component, options) => {
   })();
   const assert = options.assert || require('assert');
   const shouldSkipCombo = options.shouldSkipCombo;
+  const checkJSX = options.check;
 
   const combos = getCombos(propSamples, shouldSkipCombo);
   const error = combos.reduce((err, props) =>
-    err || checkWithProps(Component, props)
+    err || checkWithProps(Component, props, checkJSX)
     , null);
 
   if (error) {

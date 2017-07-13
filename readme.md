@@ -54,7 +54,53 @@ test('MyComponent renders without crashing', assert =>
   }));
 ```
 
-### Skips
+
+### Check rendered output
+
+Many testable behaviours can be described as invariants that should hold given some props. Since React Combo Test is already generating lots of props for your component, a hook is provided to add extra checks called `check(jsx, invariant, props)`.
+
+There are many ways to assert things about rendered JSX, so we just provide JSX and leave render/checking up to you. For example, with [enzyme's shallow renderer](http://airbnb.io/enzyme/docs/api/shallow.html):
+
+```js
+import React from 'react';
+import PropTypes from 'prop-types';
+import { shallow } from 'enzyme';
+import comboTest from 'react-combo-test';
+
+const LabeledNumber = ({ label, value }) => (
+  <p>
+    {label && (
+      <span className="label">{label}</span>
+    )}
+    {value}
+  </p>
+);
+
+LabeledNumber.propTypes = {
+  label: PropTypes.string.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+
+comboTest(MyComponent, {
+  props: {
+    label: ['', 'A', 'zed'],
+    value: [-1, 0, 1],
+  },
+  check: (jsx, invariant, props) => {
+    const wrapper = shallow(jsx);
+    const label = wrapper.find('.label');
+    if (props.label.length) {
+      invariant(label.exists(), 'A label is rendered when label is not empty');
+    } else {
+      invariant(!label.exists(), 'No label is rendered when label is empty');
+    }
+  },
+});
+```
+
+
+### Skipping invalid prop combos
 
 The best way to avoid bad states is to [make them unrepresentable](https://blogs.janestreet.com/effective-ml-revisited/) ([ahem](https://www.npmjs.com/package/results)), but sometimes you're stuck with legacy code where certain combinations of props are invalid and shouldn't be checked. React combo test has an escape hatch for this situation, `shouldSkipCombo(props)`:
 

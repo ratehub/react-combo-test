@@ -36,3 +36,16 @@ test('Bad proptypes are returned as an error', assert => {
   err = checkWithProps(Wrapped, { x: true });
   assert.ok(err, err);
 });
+
+
+test('check with invariants', assert => {
+  assert.plan(2);
+  let err;
+
+  err = checkWithProps(() => null, {}, (_, inv) => inv(false, 'noooooooooope'));
+  assert.equal(err,
+    'Invariant Violation: noooooooooope');
+
+  err = checkWithProps(() => null, {}, (_, inv) => inv(true, 'truly true'));
+  assert.ifError(err, 'invariant passes');
+});
