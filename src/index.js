@@ -8,7 +8,7 @@ const comboTest = (Component, options) => {
     throw new Error('You must provide a Component for comboTest');
   }
   const propSamples = options.props || (() => {
-    throw new Error('You must provide some sample props comboTest');
+    throw new Error('You must provide sample props for comboTest');
   })();
   const assert = options.assert || require('assert');
   const shouldSkipCombo = options.shouldSkipCombo;

@@ -13,6 +13,11 @@ Component.propTypes = {
 const Wrapped = (props) =>
   React.createElement(Component, props);
 
+const WrappedManyChildren = () =>
+  React.createElement('div', { children: [
+    React.createElement(Component, { x: 2 }),
+    React.createElement(Component, { x: 3 }),
+  ] });
 
 test('checkWithProps returns falsy for good props', assert => {
   assert.plan(2);
@@ -49,3 +54,10 @@ test('check with invariants', assert => {
   err = checkWithProps(() => null, {}, (_, inv) => inv(true, 'truly true'));
   assert.ifError(err, 'invariant passes');
 });
+
+
+test('check array of children', assert => {
+  assert.plan(1);
+  assert.ifError(checkWithProps(WrappedManyChildren, {}),
+    'no error for component with array of children');
+})

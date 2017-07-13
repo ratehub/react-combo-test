@@ -17,12 +17,9 @@ const checkChildren = shallowOutput => {
     return checkRender(getJSX(Component, props));
   }
   if (props && props.children) {
-    if (!Array.isArray(props.children)) {
-      return props.children.reduce((err, child) =>
-        err || checkChildren(child)
-        , null);
-    }
-    return checkChildren(props.children);
+    return props.children.reduce((err, child) =>
+      err || checkChildren(child)
+      , null);
   }
 }
 

@@ -228,7 +228,7 @@ test('Skip invalid combos', assert => {
     },
     shouldSkipCombo: ({ mode, value }) =>
       (mode === 'number' && typeof value !== 'number') ||
-      (mode === 'letter' && typeof value !== 'String'),
+      (mode === 'letter' && typeof value !== 'string'),
   });
 });
 
@@ -258,4 +258,17 @@ test('Invariants are checked', assert => {
   });
 
   assert.ok(checked);
+});
+
+
+test('A component must be provided', assert => {
+  assert.plan(1);
+  assert.throws(() => comboTest(undefined, { props: {} }));
+});
+
+
+test('Sample props must be provided', assert => {
+  assert.plan(2);
+  assert.throws(() => comboTest(ComponentWithoutProps));
+  assert.throws(() => comboTest(ComponentWithoutProps, {}));
 });
