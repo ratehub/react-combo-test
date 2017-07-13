@@ -3,6 +3,10 @@
   "version": "0.0.2",
   "description": "Check combinations of prop and context values for stateless components",
   "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ratehub/react-combo-test.git"
+  },
   "engines": {
     "node": ">=6.0.0"
   },
