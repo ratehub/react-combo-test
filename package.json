@@ -11,6 +11,7 @@
     "node": ">=6.0.0"
   },
   "scripts": {
+    "coverage": "istanbul cover tape -- '**/__tests__/test-*.js' | tap-spec",
     "lint": "eslint **/*.js",
     "test": "tape '**/__tests__/test-*.js'",
     "watch:test": "nodemon -w '**/*.js' -x 'npm t | tap-spec'"
@@ -31,6 +32,7 @@
   "devDependencies": {
     "enzyme": "^2.9.1",
     "eslint": "^4.1.1",
+    "istanbul": "^0.4.5",
     "nodemon": "^1.11.0",
     "prop-types": "^15.5.10",
     "tap-spec": "^4.1.1",
