@@ -124,3 +124,67 @@ test('Failing checks throw if assert is not provided', assert => {
     comboTest(ComponentWithProps, { props: {} })
     , 'Failing checks throw when assert is not provided');
 });
+
+test('Custom plain function assert', assert => {
+  assert.plan(2);
+  let result;
+  const fnAssert = (ok, message) =>
+    result = [ok, message]
+
+  comboTest(ComponentWithoutProps, {
+    assert: fnAssert,
+    props: {},
+  });
+  assert.deepEqual(result, [true, '<ComponentWithoutProps> passed 1 checks']);
+
+  comboTest(BrokenComponent, {
+    assert: fnAssert,
+    props: {},
+  });
+
+  assert.deepEqual(result, [false,
+    '<BrokenComponent> failed checking: BrokenComponent exploded while ' +
+    'rendering: Error: I am a broken component']);
+});
+
+test('Custom pass/fail assert', assert => {
+  assert.plan(2);
+  let passMessage, failMessage;
+  const myAssert = {
+    pass: msg => passMessage = msg,
+    fail: msg => failMessage = msg,
+  };
+
+  comboTest(ComponentWithoutProps, {
+    assert: myAssert,
+    props: {},
+  });
+  assert.deepEqual(passMessage, '<ComponentWithoutProps> passed 1 checks');
+
+  comboTest(BrokenComponent, {
+    assert: myAssert,
+    props: {},
+  });
+
+  assert.deepEqual(failMessage,
+    '<BrokenComponent> failed checking: BrokenComponent exploded while ' +
+    'rendering: Error: I am a broken component');
+});
+
+test('Custom ok assert', assert => {
+  assert.plan(2);
+
+  let message;
+  const myAssert = {
+    ok: (ok, msg) => {
+      assert.ok(ok, 'ok must be called with true for assert.ok');
+      message = msg;
+    },
+  };
+
+  comboTest(ComponentWithoutProps, {
+    assert: myAssert,
+    props: {},
+  });
+  assert.deepEqual(message, '<ComponentWithoutProps> passed 1 checks');
+});

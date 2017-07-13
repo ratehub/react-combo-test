@@ -21,7 +21,7 @@ const comboTest = (Component, options) => {
     const fail = assert.fail || (msg => assert(false, msg));
     fail(`<${getName(Component)}> failed checking: ${error}`);
   } else {
-    const ok = assert.pass || (msg => assert(true, msg));
+    const ok = assert.pass || (msg => (assert.ok || assert)(true, msg));
     ok(`<${getName(Component)}> passed ${combos.length} checks`);
   }
 };
