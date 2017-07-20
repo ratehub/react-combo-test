@@ -6,6 +6,10 @@ const silenceReactWarnings = require('./silenceReactWarnings');
 const getName = require('./getName');
 
 
+const isDOM = type =>
+  typeof type === 'string';
+
+
 const getJSX = (Component, props) =>
   silenceReactWarnings(() => React.createElement(Component, props));
 
@@ -13,14 +17,12 @@ const getJSX = (Component, props) =>
 const checkChildren = shallowOutput => {
   if (!shallowOutput) return;
   const { type: Component, props } = shallowOutput;
-  if (Component && Component.propTypes) {
-    return checkRender(getJSX(Component, props));
-  }
-  if (props && props.children) {
-    return props.children.reduce((err, child) =>
+  if (isDOM(Component)) {
+    return props && props.children && props.children.reduce((err, child) =>
       err || checkChildren(child)
       , null);
   }
+  return Component && checkRender(getJSX(Component, props));
 }
 
 
@@ -28,9 +30,11 @@ const checkRender = jsx => {
   const { type: Component, props } = jsx;
 
   // check the component's props
-  const propError = checkPropTypes(Component.propTypes, props, 'prop',
-    getName(Component));
-  if (propError) return propError;
+  if (Component.propTypes) {
+    const propError = checkPropTypes(Component.propTypes, props, 'prop',
+      getName(Component));
+    if (propError) return propError;
+  }
 
   // shallow-render the component
   const renderer = new Shallow();

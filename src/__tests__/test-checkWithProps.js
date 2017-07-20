@@ -1,6 +1,7 @@
 const test = require('tape');
-const React = require('react');
+const { createElement: e } = require('react');
 const PropTypes = require('prop-types');
+const { inject } = require('mobx-react');
 const checkWithProps = require('../checkWithProps');
 
 const Component = ({ x }) =>
@@ -11,13 +12,25 @@ Component.propTypes = {
 };
 
 const Wrapped = (props) =>
-  React.createElement(Component, props);
+  e(Component, props);
 
 const WrappedManyChildren = () =>
-  React.createElement('div', { children: [
-    React.createElement(Component, { x: 2 }),
-    React.createElement(Component, { x: 3 }),
-  ] });
+  e('div', null,
+    e(Component, { x: 2 }),
+    e(Component, { x: 3 }));
+
+const BlahWrapped = ({ children }) =>
+  e('div', null, ...children);
+
+const CompositeWrappedManyChildren = () =>
+  e(BlahWrapped, null,
+    e(Component, { x: 2 }),
+    e(Component, { x: 3 }));
+
+const Broken = () => {
+  throw new Error('I am broken');
+}
+
 
 test('checkWithProps returns falsy for good props', assert => {
   assert.plan(2);
@@ -57,7 +70,15 @@ test('check with invariants', assert => {
 
 
 test('check array of children', assert => {
-  assert.plan(1);
+  assert.plan(2);
   assert.ifError(checkWithProps(WrappedManyChildren, {}),
     'no error for component with array of children');
-})
+  assert.ifError(checkWithProps(CompositeWrappedManyChildren, {}),
+    'no error for composite component with array of children');
+});
+
+test('Regression: mobx injector prevents rendering', assert => {
+  assert.plan(1);
+  const err = checkWithProps(inject('x')(Broken), { x: [1] });
+  assert.ok(err, err);
+});
