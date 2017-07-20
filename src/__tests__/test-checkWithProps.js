@@ -1,7 +1,7 @@
 const test = require('tape');
 const { createElement: e } = require('react');
 const PropTypes = require('prop-types');
-const { inject } = require('mobx-react');
+const { Provider, inject } = require('mobx-react');
 const checkWithProps = require('../checkWithProps');
 
 const Component = ({ x }) =>
@@ -30,6 +30,10 @@ const CompositeWrappedManyChildren = () =>
 const Broken = () => {
   throw new Error('I am broken');
 }
+
+const PassingContext = () =>
+  e(Provider, { x: 1 },
+    e(inject('x')(Component)));
 
 
 test('checkWithProps returns falsy for good props', assert => {
@@ -81,4 +85,9 @@ test('Regression: mobx injector prevents rendering', assert => {
   assert.plan(1);
   const err = checkWithProps(inject('x')(Broken), { x: [1] });
   assert.ok(err, err);
+});
+
+test('Regression: context is kept while rendering down the tree', assert => {
+  assert.plan(1);
+  assert.ifError(checkWithProps(PassingContext, {}));
 });
