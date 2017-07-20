@@ -1,5 +1,5 @@
 const test = require('tape');
-const React = require('react');
+const { createElement: e } = require('react');
 const PropTypes = require('prop-types');
 const { shallow } = require('enzyme');
 const comboTest = require('..');
@@ -19,13 +19,13 @@ ComponentWithProps.propTypes = {
 };
 
 const ComponentPassingPropsCorrectly = ({ x }) =>
-  React.createElement(ComponentWithProps, { x });
+  e(ComponentWithProps, { x });
 ComponentPassingPropsCorrectly.propTypes = {
   x: PropTypes.number.isRequired,
 };
 
 const ComponentPassingPropsBadly = ({ x }) =>
-  React.createElement(ComponentWithProps, { x });  // x is a string, not number
+  e(ComponentWithProps, { x });  // x is a string, not number
 ComponentPassingPropsBadly.propTypes = {
   x: PropTypes.string.isRequired,
 };
@@ -35,7 +35,7 @@ const BrokenComponent = () => {
 };
 
 const ComponentWithoutPropsPassingPropsBadly = () =>
-  React.createElement(ComponentWithProps);
+  e(ComponentWithProps);
 
 const ComponentWithInvalidCombos = ({ mode, value }) =>
   ({
@@ -54,9 +54,8 @@ ComponentWithInvalidCombos.propTypes = {
 };
 
 const LabeledNumber = ({ label, value }) =>
-  React.createElement('p', {}, [
-    label && React.createElement('span', { className: 'label' }, [ label ]),
-  ]);
+  e('p', null,
+    label && e('span', { className: 'label' }, label));
 LabeledNumber.propTypes = {
   label: PropTypes.string.isRequired,
   value: PropTypes.number.isRequired,

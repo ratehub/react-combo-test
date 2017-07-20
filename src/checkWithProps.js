@@ -6,8 +6,8 @@ const silenceReactWarnings = require('./silenceReactWarnings');
 const getName = require('./getName');
 
 
-const isDOM = type =>
-  typeof type === 'string';
+const isComposite = type =>
+  typeof type === 'function';
 
 
 const getJSX = (Component, props) =>
@@ -17,13 +17,18 @@ const getJSX = (Component, props) =>
 const checkChildren = shallowOutput => {
   if (!shallowOutput) return;
   const { type: Component, props } = shallowOutput;
-  if (isDOM(Component)) {
-    return props && props.children && props.children.reduce((err, child) =>
-      err || checkChildren(child)
-      , null);
+  if (isComposite(Component)) {
+    return Component && checkRender(getJSX(Component, props));
   }
-  return Component && checkRender(getJSX(Component, props));
-}
+  if (props && props.children) {
+    if (Array.isArray(props.children)) {
+      return props.children.reduce((err, child) =>
+        err || checkChildren(child)
+        , null);
+    }
+    return checkChildren(props.children);
+  }
+};
 
 
 const checkRender = jsx => {
