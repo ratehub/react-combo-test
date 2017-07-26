@@ -35,7 +35,11 @@ test('MyComponent renders without crashing', () =>
   }));
 ```
 
-In this case, `MyComponent` will be shallow-rendered nine times, checking every combination of the sample props (eg, `<MyComponent colour="red", interactive={true} />`, `<MyComponent colour="red" interactive={false} />`, ...).
+In this case, `MyComponent` will be rendered nine times, checking every combination of the sample props (eg, `<MyComponent colour="red", interactive={true} />`, `<MyComponent colour="red" interactive={false} />`, ...).
+
+
+**Gotcha: import `react-combo-test` before `react`.** This library patches react's render functionality in order to intercept proptype errors. To set that up, it needs to be imported before react is.
+
 
 You can also pass your test framework's `assert` to `comboTest` for better failure reporting. Again with tape:
 
@@ -62,10 +66,10 @@ Many testable behaviours can be described as invariants that should hold given s
 There are many ways to assert things about rendered JSX, so we just provide JSX and leave render/checking up to you. For example, with [enzyme's shallow renderer](http://airbnb.io/enzyme/docs/api/shallow.html):
 
 ```js
+import comboTest from 'react-combo-test';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { shallow } from 'enzyme';
-import comboTest from 'react-combo-test';
 
 const LabeledNumber = ({ label, value }) => (
   <p>
