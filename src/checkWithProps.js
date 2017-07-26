@@ -6,11 +6,7 @@ const getName = require('./getName');
 
 const checkWithProps = (Component, props, checkJSX) => {
   const jsx = createElement(Component, props);
-  try {
-    Renderer.create(jsx);
-  } catch (exc) {
-    throw new Error(`${getName(Component)} exploded while rendering: ${exc}`);
-  }
+  Renderer.create(jsx);
   if (checkJSX) {
     checkJSX(jsx, invariant, props);
   }

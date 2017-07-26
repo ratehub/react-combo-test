@@ -2,6 +2,7 @@ const unpatch = require('./patchTypeSpec');
 const getCombos = require('./getCombos');
 const checkWithProps = require('./checkWithProps');
 const getName = require('./getName');
+const usefulStack = require('./usefulStack');
 
 
 const comboTest = (Component, options) => {
@@ -26,8 +27,9 @@ const comboTest = (Component, options) => {
   }, null);
 
   if (error) {
-    const fail = assert.fail || (msg => assert(false, msg));
-    fail(`<${getName(Component)}> failed checking: ${error}`);
+    const fail = assert.ifError || assert.fail || (msg => assert(false, msg));
+    const nice = usefulStack(error);
+    fail(`<${getName(Component)}> failed checking: ${nice}`);
   } else {
     const ok = assert.pass || (msg => (assert.ok || assert)(true, msg));
     ok(`<${getName(Component)}> passed ${combos.length} checks`);

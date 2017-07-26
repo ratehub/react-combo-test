@@ -157,7 +157,7 @@ test('Failing checks throw if assert is not provided', assert => {
 });
 
 test('Custom plain function assert', assert => {
-  assert.plan(2);
+  assert.plan(3);
   let result;
   const fnAssert = (ok, message) =>
     result = [ok, message]
@@ -173,9 +173,10 @@ test('Custom plain function assert', assert => {
     props: {},
   });
 
-  assert.deepEqual(result, [false,
-    '<BrokenComponent> failed checking: Error: BrokenComponent exploded while '+
-    'rendering: Error: I am a broken component']);
+  const [ok, msg] = result;
+  assert.false(ok);
+  assert.deepEqual(msg.split('\n')[0],
+    '<BrokenComponent> failed checking: Error: I am a broken component');
 });
 
 test('Custom pass/fail assert', assert => {
@@ -197,9 +198,8 @@ test('Custom pass/fail assert', assert => {
     props: {},
   });
 
-  assert.deepEqual(failMessage,
-    '<BrokenComponent> failed checking: Error: BrokenComponent exploded while '+
-    'rendering: Error: I am a broken component');
+  assert.deepEqual(failMessage.split('\n')[0],
+    '<BrokenComponent> failed checking: Error: I am a broken component');
 });
 
 test('Custom ok assert', assert => {
