@@ -1,3 +1,4 @@
+const unpatch = require('./patchTypeSpec');
 const getCombos = require('./getCombos');
 const checkWithProps = require('./checkWithProps');
 const getName = require('./getName');
@@ -30,3 +31,4 @@ const comboTest = (Component, options) => {
 
 
 module.exports = comboTest;
+module.exports.unpatch = unpatch;

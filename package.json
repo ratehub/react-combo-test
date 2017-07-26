@@ -13,7 +13,7 @@
   "scripts": {
     "coverage": "istanbul cover tape -- '**/__tests__/test-*.js' | tap-spec",
     "lint": "eslint **/*.js",
-    "test": "tape '**/__tests__/test-*.js'",
+    "test": "tape -r ./src/__tests__/__patchForTests '**/__tests__/test-*.js'",
     "watch:test": "nodemon -w '**/*.js' -x 'npm t | tap-spec'"
   },
   "author": "uniphil",

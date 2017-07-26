@@ -1,4 +1,5 @@
 const React = require('react');
+const Renderer = require('react-test-renderer');
 const Shallow = require('react-test-renderer/shallow');
 const invariant = require('invariant');
 const checkPropTypes = require('check-prop-types');
@@ -56,9 +57,14 @@ const checkRender = jsx => {
 
 const checkWithProps = (Component, props, checkJSX) => {
   const jsx = getJSX(Component, props);
-  const renderErr = checkRender(jsx);
-  if (renderErr) {
-    return renderErr;
+  // const renderErr = checkRender(jsx);
+  // if (renderErr) {
+  //   return renderErr;
+  // }
+  try {
+    Renderer.create(jsx);
+  } catch (exc) {
+    return `${getName(Component)} exploded while rendering: ${exc}`;
   }
   if (checkJSX) {
     try {
