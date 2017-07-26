@@ -140,6 +140,11 @@ test('Components that throw fail checking', assert => {
   comboTest(BrokenComponent, { assert: flip(assert), props: {} });
 });
 
+test('coverage: more than one failing combo', assert => {
+  assert.plan(1);
+  comboTest(BrokenComponent, { assert: flip(assert), props: { x: [1, 2] } });
+});
+
 test('Failing checks throw if assert is not provided', assert => {
   assert.plan(2);
   assert.doesNotThrow(() =>
@@ -169,7 +174,7 @@ test('Custom plain function assert', assert => {
   });
 
   assert.deepEqual(result, [false,
-    '<BrokenComponent> failed checking: BrokenComponent exploded while ' +
+    '<BrokenComponent> failed checking: Error: BrokenComponent exploded while '+
     'rendering: Error: I am a broken component']);
 });
 
@@ -193,7 +198,7 @@ test('Custom pass/fail assert', assert => {
   });
 
   assert.deepEqual(failMessage,
-    '<BrokenComponent> failed checking: BrokenComponent exploded while ' +
+    '<BrokenComponent> failed checking: Error: BrokenComponent exploded while '+
     'rendering: Error: I am a broken component');
 });
 

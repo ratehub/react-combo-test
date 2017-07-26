@@ -3,7 +3,7 @@ const unpatch = require('../patchTypeSpec');
 const React = require('react');
 const PropTypes = require('prop-types');
 const Renderer = require('react-test-renderer');
-const silenceReactWarnings = require('../silenceReactWarnings');
+const silenceReactWarnings = require('./silenceReactWarnings');
 
 const Component = ({ children }) => children;
 Component.propTypes = {

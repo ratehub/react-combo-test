@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 const test = require('tape');
-const silenceReactWarnings = require('../silenceReactWarnings');
+const silenceReactWarnings = require('./silenceReactWarnings');
 
 test('console.error is mocked and restored', assert => {
   assert.plan(3);

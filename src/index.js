@@ -16,9 +16,14 @@ const comboTest = (Component, options) => {
   const checkJSX = options.check;
 
   const combos = getCombos(propSamples, shouldSkipCombo);
-  const error = combos.reduce((err, props) =>
-    err || checkWithProps(Component, props, checkJSX)
-    , null);
+  const error = combos.reduce((err, props) => {
+    if (err) return err;
+    try {
+      checkWithProps(Component, props, checkJSX);
+    } catch (exc) {
+      return exc;
+    }
+  }, null);
 
   if (error) {
     const fail = assert.fail || (msg => assert(false, msg));

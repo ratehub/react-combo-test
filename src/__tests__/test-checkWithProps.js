@@ -45,31 +45,33 @@ test('checkWithProps returns falsy for good props', assert => {
 });
 
 
-test('Bad proptypes are returned as an error', assert => {
+test('Bad proptypes are thrown', assert => {
   assert.plan(3);
   let err;
 
-  err = checkWithProps(Component, {});
-  assert.ok(err, err);
+  assert.throws(() =>
+    checkWithProps(Component, {}), 'missing x');
 
-  err = checkWithProps(Component, { x: 'asdf' });
-  assert.ok(err, err);
+  assert.throws(() =>
+    checkWithProps(Component, { x: 'asdf' }), 'string instead of number for x');
 
-  err = checkWithProps(Wrapped, { x: true });
-  assert.ok(err, err);
+  assert.throws(() =>
+    checkWithProps(Wrapped, { x: true }), 'bool instead of number for x');
 });
 
 
 test('check with invariants', assert => {
   assert.plan(2);
-  let err;
 
-  err = checkWithProps(() => null, {}, (_, inv) => inv(false, 'noooooooooope'));
-  assert.equal(err,
-    'Invariant Violation: noooooooooope');
+  try {
+    checkWithProps(() => null, {}, (_, inv) => inv(false, 'noooooooooope'));
+  } catch (err) {
+    assert.equal(`${err}`,
+      'Invariant Violation: noooooooooope');
+  }
 
-  err = checkWithProps(() => null, {}, (_, inv) => inv(true, 'truly true'));
-  assert.ifError(err, 'invariant passes');
+  assert.doesNotThrow(() =>
+    checkWithProps(() => null, {}, (_, inv) => inv(true, 'truly true')));
 });
 
 
@@ -83,8 +85,11 @@ test('check array of children', assert => {
 
 test('Regression: mobx injector prevents rendering', assert => {
   assert.plan(1);
-  const err = checkWithProps(inject('x')(Broken), { x: [1] });
-  assert.ok(err, err);
+  try {
+    checkWithProps(inject('x')(Broken), { x: [1] });
+  } catch (err) {
+    assert.ok(err, `${err}`);
+  }
 });
 
 test('Regression: context is kept while rendering down the tree', assert => {
