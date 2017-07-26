@@ -32,7 +32,8 @@ const comboTest = (Component, options) => {
     fail(`<${getName(Component)}> failed checking: ${nice}`);
   } else {
     const ok = assert.pass || (msg => (assert.ok || assert)(true, msg));
-    ok(`<${getName(Component)}> passed ${combos.length} checks`);
+    const checks = combos.length === 1 ? 'check' : 'checks';
+    ok(`<${getName(Component)}> passed ${combos.length} ${checks}`);
   }
 };
 

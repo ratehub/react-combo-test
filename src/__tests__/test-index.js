@@ -166,7 +166,7 @@ test('Custom plain function assert', assert => {
     assert: fnAssert,
     props: {},
   });
-  assert.deepEqual(result, [true, '<ComponentWithoutProps> passed 1 checks']);
+  assert.deepEqual(result, [true, '<ComponentWithoutProps> passed 1 check']);
 
   comboTest(BrokenComponent, {
     assert: fnAssert,
@@ -191,7 +191,7 @@ test('Custom pass/fail assert', assert => {
     assert: myAssert,
     props: {},
   });
-  assert.deepEqual(passMessage, '<ComponentWithoutProps> passed 1 checks');
+  assert.deepEqual(passMessage, '<ComponentWithoutProps> passed 1 check');
 
   comboTest(BrokenComponent, {
     assert: myAssert,
@@ -217,7 +217,7 @@ test('Custom ok assert', assert => {
     assert: myAssert,
     props: {},
   });
-  assert.deepEqual(message, '<ComponentWithoutProps> passed 1 checks');
+  assert.deepEqual(message, '<ComponentWithoutProps> passed 1 check');
 });
 
 
