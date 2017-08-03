@@ -13,7 +13,8 @@
   "scripts": {
     "coverage": "istanbul cover tape -- -r ./src/__tests__/__patchForTests '**/__tests__/test-*.js' | tap-spec",
     "lint": "eslint **/*.js",
-    "test": "tape -r ./src/__tests__/__patchForTests '**/__tests__/test-*.js'",
+    "test": "tape -r ./src/__tests__/__patchForTests '**/__tests__/test-*.js' && npm run test:runners",
+    "test:runners": "jest --roots other-runners/jest --silent",
     "watch:test": "nodemon -w '**/*.js' -x 'npm t | tap-spec'"
   },
   "author": "uniphil",
@@ -33,6 +34,7 @@
     "enzyme": "^2.9.1",
     "eslint": "^4.1.1",
     "istanbul": "^0.4.5",
+    "jest": "^20.0.4",
     "mobx": "^3.2.1",
     "mobx-react": "^4.2.2",
     "nodemon": "^1.11.0",

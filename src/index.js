@@ -1,4 +1,10 @@
-const unpatch = require('./patchTypeSpec');
+let unpatch;
+if (typeof jest !== 'undefined') {
+  unpatch = require('./patchTypeSpecForJest');
+} else {
+  unpatch = require('./patchTypeSpec');
+}
+
 const getCombos = require('./getCombos');
 const checkWithProps = require('./checkWithProps');
 const getName = require('./getName');
