@@ -10,6 +10,7 @@ describe('checkPropTypes patching', () => {
     const assert = () => null;
     comboTest(Component, { assert, props: {} });
     expect(spy).not.toHaveBeenCalled();
+    spy.mockRestore();
   });
 
   it('fails tests that trigger propType errors', () => {
