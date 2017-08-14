@@ -6,7 +6,9 @@ const getName = require('./getName');
 
 const checkWithProps = (Component, props, checkJSX) => {
   const jsx = createElement(Component, props);
-  Renderer.create(jsx);
+  Renderer
+    .create(jsx)  // propTypes checking has been shimmed to throw on error
+    .unmount();  // finish the component lifecycle (resource management?)
   if (checkJSX) {
     checkJSX(jsx, invariant, props);
   }

@@ -1,5 +1,5 @@
 const test = require('tape');
-const { createElement: e } = require('react');
+const { createElement: e, Component } = require('react');
 const PropTypes = require('prop-types');
 const { shallow } = require('enzyme');
 const comboTest = require('..');
@@ -275,4 +275,26 @@ test('Sample props must be provided', assert => {
   assert.plan(2);
   assert.throws(() => comboTest(ComponentWithoutProps));
   assert.throws(() => comboTest(ComponentWithoutProps, {}));
+});
+
+
+test('Components are unmounted between combos', assert => {
+  assert.plan(1);
+  let mounted = false;
+  class ThereCanOnlyBeOne extends Component {
+    constructor(props) {
+      super(props);
+      if (mounted) throw new Error('ohH NOOOOOOOOOOOOOOOOooooooooooooo');
+      mounted = true;
+    }
+    componentWillUnmount() {
+      mounted = false;
+    }
+    render() {
+      return null;
+    }
+  }
+  assert.doesNotThrow(() => comboTest(ThereCanOnlyBeOne, { props: {
+    prop: [0, 1],
+  } }));
 });
