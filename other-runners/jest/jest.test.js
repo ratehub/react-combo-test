@@ -8,7 +8,7 @@ describe('checkPropTypes patching', () => {
   it('prevents propType errors from going to the console', () => {
     const spy = jest.spyOn(console, 'error');
     const assert = () => null;
-    comboTest(Component, { assert, props: {} });
+    comboTest(Component, {}, { assert });
     expect(spy).not.toHaveBeenCalled();
     spy.mockRestore();
   });
@@ -18,7 +18,7 @@ describe('checkPropTypes patching', () => {
       pass: jest.fn(),
       fail: jest.fn(),
     };
-    comboTest(Component, { assert, props: {} });
+    comboTest(Component, {}, { assert });
     expect(assert.pass).not.toHaveBeenCalled();
     expect(assert.fail).toHaveBeenCalled();
   });

@@ -28,10 +28,8 @@ import MyComponent from '../wherever';
 
 test('MyComponent renders without crashing', () =>
   comboTest(MyComponent, {
-    props: {
-      colour: ['red', '#BAD', 'rgba(4, 3, 2, 1)'],
-      interactive: [true, false, undefined],
-    },
+    colour: ['red', '#BAD', 'rgba(4, 3, 2, 1)'],
+    interactive: [true, false, undefined],
   }));
 ```
 
@@ -50,11 +48,10 @@ import MyComponent from '../wherever';
 
 test('MyComponent renders without crashing', assert =>
   comboTest(MyComponent, {
+    colour: ['red', '#BAD', 'rgba(4, 3, 2, 1)'],
+    interactive: [true, false, undefined],
+  }, {
     assert,
-    props: {
-      colour: ['red', '#BAD', 'rgba(4, 3, 2, 1)'],
-      interactive: [true, false, undefined],
-    },
   }));
 ```
 
@@ -87,10 +84,9 @@ LabeledNumber.propTypes = {
 
 
 comboTest(MyComponent, {
-  props: {
-    label: ['', 'A', 'zed'],
-    value: [-1, 0, 1],
-  },
+  label: ['', 'A', 'zed'],
+  value: [-1, 0, 1],
+}, {
   check: (jsx, invariant, props) => {
     const wrapper = shallow(jsx);
     const label = wrapper.find('.label');
@@ -113,10 +109,9 @@ import comboTest from 'react-combo-test';
 
 
 comboTest(AnnoyingComponent, {
-  props: {
-    mode: ['numbers', 'letters'],
-    value: [-1, 0, 1, 'A', 'Z', 'm'],
-  },
+  mode: ['numbers', 'letters'],
+  value: [-1, 0, 1, 'A', 'Z', 'm'],
+}, {
   shouldSkipCombo: ({ mode, value }) =>
     (mode === 'numbers' && typeof value !== 'number') ||
     (mode === 'letters' && typeof value !== 'String'),
@@ -128,6 +123,7 @@ comboTest(AnnoyingComponent, {
 
 This library takes a naïve but useful approach that I should write more about in this section.
 
+
 ## History
 
-The code for this project originated inside [openride](https://openride.co)'s web app before [ratehub](https://ratehub.ca) sponsored its liberation into this open-source library version.
+In 2016, the original idea and code were implemented in [openride](https://openride.co)'s web app code. In 2017, [ratehub](https://ratehub.ca) sponsored extracting and refactoring it into this open-source library version.

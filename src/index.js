@@ -11,11 +11,11 @@ const getName = require('./getName');
 const usefulStack = require('./usefulStack');
 
 
-const comboTest = (Component, options) => {
+const comboTest = (Component, props, options = {}) => {
   if (typeof Component === 'undefined') {
     throw new Error('You must provide a Component for comboTest');
   }
-  const propSamples = options.props || (() => {
+  const propSamples = props || (() => {
     throw new Error('You must provide sample props for comboTest');
   })();
   const assert = options.assert || require('assert');

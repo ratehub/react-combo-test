@@ -70,9 +70,8 @@ const flip = assert => ({
 
 test('Component without props is ok', assert => {
   assert.plan(2);
-  const props = {};
-  comboTest(ComponentWithoutProps, { assert, props });
-  comboTest(ComponentWithEmptyProps, { assert, props });
+  comboTest(ComponentWithoutProps, {}, { assert });
+  comboTest(ComponentWithEmptyProps, {}, { assert });
 });
 
 test('Component without props ignores extra props', assert => {
@@ -84,75 +83,71 @@ test('Component without props ignores extra props', assert => {
   const props = {
     badProp: ['booo'],
   };
-  comboTest(ComponentWithoutProps, { assert, props });
-  comboTest(ComponentWithEmptyProps, { assert, props });
+  comboTest(ComponentWithoutProps, props, { assert });
+  comboTest(ComponentWithEmptyProps, props, { assert });
 });
 
 test('ComponentWithProps', assert => {
   assert.plan(6);
+
   comboTest(ComponentWithProps, {
-    assert,
-    props: { x: [1], y: [undefined] },
-  });
+    x: [1], y: [undefined],
+  }, { assert });
+
   comboTest(ComponentWithProps, {
-    assert,
-    props: { x: [1], y: ['asdf'] },
-  });
+    x: [1], y: ['asdf'],
+  }, { assert });
+
   comboTest(ComponentWithProps, {
-    assert: flip(assert),
-    props: {},
-  });
+  }, { assert: flip(assert) });
+
   comboTest(ComponentWithProps, {
-    assert: flip(assert),
-    props: { y: ['asdf'] },
-  });
+    y: ['asdf'],
+  }, { assert: flip(assert) });
+
   comboTest(ComponentWithProps, {
-    assert: flip(assert),
-    props: { x: [1], y: [true] },
-  });
+    x: [1], y: [true],
+  }, { assert: flip(assert) });
+
   comboTest(ComponentWithProps, {
-    assert: assert,
-    props: {
-      x: [0, 1, -1],
-      y: [undefined, '', 'abc'],
-    },
-  });
+    x: [0, 1, -1],
+    y: [undefined, '', 'abc'],
+  }, { assert });
 });
 
 test('Component Passing Props to children', assert => {
   assert.plan(3);
+
   comboTest(ComponentPassingPropsCorrectly, {
-    assert,
-    props: { x: [1] },
-  });
+    x: [1],
+  }, { assert });
   comboTest(ComponentPassingPropsBadly, {
-    assert: flip(assert),
-    props: { x: ['x'] },
-  });
+    x: ['x'],
+  }, { assert: flip(assert) });
   comboTest(ComponentWithoutPropsPassingPropsBadly, {
-    assert: flip(assert),
-    props: {},
-  });
+  }, { assert: flip(assert) });
 });
 
 test('Components that throw fail checking', assert => {
   assert.plan(1);
-  comboTest(BrokenComponent, { assert: flip(assert), props: {} });
+  comboTest(BrokenComponent, {}, { assert: flip(assert) });
 });
 
 test('coverage: more than one failing combo', assert => {
   assert.plan(1);
-  comboTest(BrokenComponent, { assert: flip(assert), props: { x: [1, 2] } });
+  comboTest(BrokenComponent, {
+    x: [1, 2],
+  }, { assert: flip(assert) });
 });
 
 test('Failing checks throw if assert is not provided', assert => {
   assert.plan(2);
   assert.doesNotThrow(() =>
-    comboTest(ComponentWithoutProps, { props: {} })
+    comboTest(ComponentWithoutProps, {})
     , 'Nothing explodes when checking succeeds without assert');
 
   assert.throws(() =>
-    comboTest(ComponentWithProps, { props: {} })
+    comboTest(ComponentWithProps, {})
     , 'Failing checks throw when assert is not provided');
 });
 
@@ -162,15 +157,13 @@ test('Custom plain function assert', assert => {
   const fnAssert = (ok, message) =>
     result = [ok, message]
 
-  comboTest(ComponentWithoutProps, {
+  comboTest(ComponentWithoutProps, {}, {
     assert: fnAssert,
-    props: {},
   });
   assert.deepEqual(result, [true, '<ComponentWithoutProps> passed 1 check']);
 
-  comboTest(BrokenComponent, {
+  comboTest(BrokenComponent, {}, {
     assert: fnAssert,
-    props: {},
   });
 
   const [ok, msg] = result;
@@ -187,15 +180,13 @@ test('Custom pass/fail assert', assert => {
     fail: msg => failMessage = msg,
   };
 
-  comboTest(ComponentWithoutProps, {
+  comboTest(ComponentWithoutProps, {}, {
     assert: myAssert,
-    props: {},
   });
   assert.deepEqual(passMessage, '<ComponentWithoutProps> passed 1 check');
 
-  comboTest(BrokenComponent, {
+  comboTest(BrokenComponent, {}, {
     assert: myAssert,
-    props: {},
   });
 
   assert.deepEqual(failMessage.split('\n')[0],
@@ -213,9 +204,8 @@ test('Custom ok assert', assert => {
     },
   };
 
-  comboTest(ComponentWithoutProps, {
+  comboTest(ComponentWithoutProps, {}, {
     assert: myAssert,
-    props: {},
   });
   assert.deepEqual(message, '<ComponentWithoutProps> passed 1 check');
 });
@@ -225,11 +215,10 @@ test('Skip invalid combos', assert => {
   assert.plan(1);
 
   comboTest(ComponentWithInvalidCombos, {
+    mode: ['number', 'letter'],
+    value: [1, 'a'],
+  }, {
     assert,
-    props: {
-      mode: ['number', 'letter'],
-      value: [1, 'a'],
-    },
     shouldSkipCombo: ({ mode, value }) =>
       (mode === 'number' && typeof value !== 'number') ||
       (mode === 'letter' && typeof value !== 'string'),
@@ -242,11 +231,10 @@ test('Invariants are checked', assert => {
   let checked = false;
 
   comboTest(LabeledNumber, {
+    label: ['', 'A', 'zed'],
+    value: [-1, 0, 1],
+  }, {
     assert,
-    props: {
-      label: ['', 'A', 'zed'],
-      value: [-1, 0, 1],
-    },
     check: (jsx, invariant, props) => {
       checked = true;
       const wrapper = shallow(jsx);
@@ -267,14 +255,13 @@ test('Invariants are checked', assert => {
 
 test('A component must be provided', assert => {
   assert.plan(1);
-  assert.throws(() => comboTest(undefined, { props: {} }));
+  assert.throws(() => comboTest(undefined, {}));
 });
 
 
 test('Sample props must be provided', assert => {
-  assert.plan(2);
+  assert.plan(1);
   assert.throws(() => comboTest(ComponentWithoutProps));
-  assert.throws(() => comboTest(ComponentWithoutProps, {}));
 });
 
 
@@ -294,7 +281,7 @@ test('Components are unmounted between combos', assert => {
       return null;
     }
   }
-  assert.doesNotThrow(() => comboTest(ThereCanOnlyBeOne, { props: {
+  assert.doesNotThrow(() => comboTest(ThereCanOnlyBeOne, {
     prop: [0, 1],
-  } }));
+  }));
 });
