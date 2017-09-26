@@ -291,3 +291,17 @@ test('Components are unmounted between combos', assert => {
   assert.false(mounted);
   assert.equal(mountCount, 2);
 });
+
+
+test('Component must be a valid component', assert => {
+  assert.plan(1);
+  assert.throws(() => comboTest({}, {}),
+    /The component type provided to comboTest was invalid/);
+});
+
+
+test('Providing JSX instead of a component throws a useful error', assert => {
+  assert.plan(1);
+  assert.throws(() => comboTest(e(ComponentWithoutProps), {}),
+    /Pass the component itself, not JSX/);
+});

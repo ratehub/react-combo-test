@@ -5,6 +5,8 @@ if (typeof jest !== 'undefined') {
   unpatch = require('./patchTypeSpec');
 }
 
+const { isValidElement } = require('react');
+const isValidComponent = require('./isValidComponent');
 const getCombos = require('./getCombos');
 const checkWithProps = require('./checkWithProps');
 const getName = require('./getName');
@@ -12,8 +14,16 @@ const usefulStack = require('./usefulStack');
 
 
 const comboTest = (Component, props, options = {}) => {
-  if (typeof Component === 'undefined') {
-    throw new Error('You must provide a Component for comboTest');
+  if (!isValidComponent(Component)) {
+    if (Component == null) {  // null or undefined
+      throw new Error('You must provide a Component for comboTest');
+    }
+    if (isValidElement(Component)) {
+      throw new Error('Pass the component itself, not JSX. ' +
+        'eg., `comboTest(Component, {})`, not `comboTest(<Component />, {})`');
+    }
+    throw new Error('The component type provided to comboTest was invalid. ' +
+      `Expected a function, class, or string, but found '${typeof Component}'`);
   }
   const propSamples = props || (() => {
     throw new Error('You must provide sample props for comboTest');

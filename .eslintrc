@@ -9,7 +9,7 @@
     "curly": ["error", "multi-line"],
     "global-require": "off",
     "indent": ["error", 2],
-    "max-len": "error",
+    "max-len": ["error", { "ignoreUrls": true }],
     "no-confusing-arrow": "off",
     "no-console": "error",
     "no-else-return": "error",

@@ -1,7 +1,6 @@
 const { createElement } = require('react');
 const Renderer = require('react-test-renderer');
 const invariant = require('invariant');
-const getName = require('./getName');
 
 
 const checkWithProps = (Component, props, checkJSX) => {
