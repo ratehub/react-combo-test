@@ -266,11 +266,14 @@ test('Sample props must be provided', assert => {
 
 
 test('Components are unmounted between combos', assert => {
-  assert.plan(1);
+  assert.plan(3);
   let mounted = false;
+  let mountCount = 0;
+
   class ThereCanOnlyBeOne extends Component {
     constructor(props) {
       super(props);
+      mountCount += 1;
       if (mounted) throw new Error('ohH NOOOOOOOOOOOOOOOOooooooooooooo');
       mounted = true;
     }
@@ -281,7 +284,10 @@ test('Components are unmounted between combos', assert => {
       return null;
     }
   }
+
   assert.doesNotThrow(() => comboTest(ThereCanOnlyBeOne, {
     prop: [0, 1],
   }));
+  assert.false(mounted);
+  assert.equal(mountCount, 2);
 });
