@@ -2,7 +2,7 @@ const { assertPropTypes } = require('check-prop-types');
 
 const shimmed = (specs, values, location, componentName, element, debugId) =>
   assertPropTypes(specs, values, location, componentName);
-const id = require.resolve('react/lib/checkReactTypeSpec');
+const id = require.resolve('prop-types/checkPropTypes');
 
 function patch() {
   jest.setMock(id, shimmed);  // eslint-disable-line no-undef

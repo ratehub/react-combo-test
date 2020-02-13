@@ -1,5 +1,5 @@
 const Module = require('module');
-const original = require('react/lib/checkReactTypeSpec');
+const original = require('prop-types/checkPropTypes');
 const assertPropTypes = require('check-prop-types').assertPropTypes;
 
 let isPatched = false;
@@ -11,8 +11,8 @@ function wrapped(specs, values, location, componentName, element, debugId) {
 }
 
 Module.prototype.require = function patchedRequire(path) {
-  if (path.endsWith('/checkReactTypeSpec') ||
-      path.endsWith('/checkReactTypeSpec.js')) {
+  if (path.endsWith('/checkPropTypes') ||
+      path.endsWith('/checkPropTypes.js')) {
     return wrapped;
   }
   return Module._load(path, this);  // eslint-disable-line no-underscore-dangle
